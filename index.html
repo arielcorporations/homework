@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>סיכום יום.קום</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #8ecae6, #219ebc);
+            color: #333;
+            text-align: center;
+            direction: rtl;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            margin-top: 20px;
+            color: white;
+            font-size: 32px;
+        }
+        .container {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin: 20px auto;
+            width: 90%;
+            max-width: 600px;
+        }
+        input[type="date"], textarea, input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+        }
+        button {
+            background-color: #219ebc;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #023047;
+        }
+        #linkContainer {
+            margin-top: 20px;
+            display: none;
+        }
+        #copyLink {
+            margin-top: 10px;
+        }
+        #sidebar {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .sidebar-button {
+            margin: 0 10px;
+            background-color: #219ebc;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .sidebar-button:hover {
+            background-color: #023047;
+        }
+        #homeScreen, #uploadSection, #viewSection {
+            display: none;
+        }
+        #homeScreen {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <h1>סיכום יום.קום</h1>
+
+    <div id="sidebar">
+        <button class="sidebar-button" onclick="showSection('uploadSection')">העלה שיעורי בית</button>
+        <button class="sidebar-button" onclick="showSection('viewSection')">צפה בשיעורי הבית</button>
+    </div>
+
+    <div id="homeScreen" class="container">
+        <h2>ברוכים הבאים לסיכום יום.קום</h2>
+        <p>בחר את הפעולה הרצויה מהתפריט בצד.</p>
+    </div>
+
+    <div id="uploadSection" class="container">
+        <h2>העלה שיעורי בית</h2>
+        <form id="uploadForm">
+            <label for="date">בחר תאריך:</label>
+            <input type="date" id="date" name="date" required>
+
+            <label for="lesson1">מה עשינו בשיעור הראשון?</label>
+            <textarea id="lesson1" name="lesson1" placeholder="הקלד כאן..." required></textarea>
+
+            <label for="lesson2">מה עשינו בשיעור השני?</label>
+            <textarea id="lesson2" name="lesson2" placeholder="הקלד כאן..." required></textarea>
+
+            <label for="lesson3">מה עשינו בשיעור השלישי?</label>
+            <textarea id="lesson3" name="lesson3" placeholder="הקלד כאן..." required></textarea>
+
+            <label for="lesson4">מה עשינו בשיעור הרביעי?</label>
+            <textarea id="lesson4" name="lesson4" placeholder="הקלד כאן..." required></textarea>
+
+            <!-- Optional Lessons -->
+            <label for="lesson5">מה עשינו בשיעור החמישי? (אופציונלי)</label>
+            <textarea id="lesson5" name="lesson5" placeholder="הקלד כאן..."></textarea>
+
+            <label for="lesson6">מה עשינו בשיעור השישי? (אופציונלי)</label>
+            <textarea id="lesson6" name="lesson6" placeholder="הקלד כאן..."></textarea>
+
+            <label for="lesson7">מה עשינו בשיעור השביעי? (אופציונלי)</label>
+            <textarea id="lesson7" name="lesson7" placeholder="הקלד כאן..."></textarea>
+            
+            <label for="cancelClass">השיעור התבטל?</label>
+            <input type="checkbox" id="cancelClass" name="cancelClass">
+
+            <!-- Button for hyperlink insertion -->
+            <button type="button" id="insertLinkBtn">הוסף קישור</button>
+
+            <button type="submit">שלח שיעורי בית</button>
+        </form>
+
+        <!-- Copyable Homework Link -->
+        <div id="linkContainer">
+            <p>הקישור לשיעורי הבית שלך:</p>
+            <input type="text" id="homeworkLink" readonly>
+            <button id="copyLink">העתק קישור</button>
+        </div>
+    </div>
+
+    <div id="viewSection" class="container">
+        <h2>צפה בשיעורי הבית</h2>
+        <form id="viewForm">
+            <label for="viewDate">בחר תאריך:</label>
+            <input type="date" id="viewDate" name="viewDate" required>
+            <button type="submit">הצג</button>
+        </form>
+
+        <!-- Display the homework details here -->
+        <div id="homeworkDetails" style="margin-top: 20px;"></div>
+    </div>
+
+    <script>
+        const uploadForm = document.getElementById('uploadForm');
+        const viewForm = document.getElementById('viewForm');
+        const linkContainer = document.getElementById('linkContainer');
+        const homeworkLink = document.getElementById('homeworkLink');
+        const copyLinkButton = document.getElementById('copyLink');
+        const insertLinkBtn = document.getElementById('insertLinkBtn');
+
+        function showSection(sectionId) {
+            document.getElementById('homeScreen').style.display = 'none';
+            document.getElementById('uploadSection').style.display = 'none';
+            document.getElementById('viewSection').style.display = 'none';
+            document.getElementById(sectionId).style.display = 'block';
+        }
+
+        uploadForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            
+            const date = document.getElementById('date').value;
+            const lesson1 = document.getElementById('lesson1').value;
+            const lesson2 = document.getElementById('lesson2').value;
+            const lesson3 = document.getElementById('lesson3').value;
+            const lesson4 = document.getElementById('lesson4').value;
+            const lesson5 = document.getElementById('lesson5').value || '(לא הוזן)';
+            const lesson6 = document.getElementById('lesson6').value || '(לא הוזן)';
+            const lesson7 = document.getElementById('lesson7').value || '(לא הוזן)';
+            const cancelClass = document.getElementById('cancelClass').checked;
+
+            const lessons = {
+                lesson1, lesson2, lesson3, lesson4, lesson5, lesson6, lesson7
+            };
+
+            const data = {
+                date: date,
+                lessons: JSON.stringify(lessons) + (cancelClass ? ' (השיעור התבטל)' : ''),
+            };
+
+            fetch('https://script.google.com/macros/s/AKfycbzfie9MdIUf00rwoEFUyVDvD-4UnYQYmIz4BRdUMTEc3NjL-yaBDMMXYVKLAnsKJU4o/exec', {
+                method: 'POST',
+                body: new URLSearchParams(data),
+            })
+            .then(response => response.text())
+            .then(result => {
+                alert('שיעורי הבית נשלחו בהצלחה!');
+
+                // Generate a homework link for sharing
+                const shareableLink = `https://arielcorporations.github.io/homework/index.html?date=${date}`;
+                homeworkLink.value = shareableLink;
+                linkContainer.style.display = 'block';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+
+        // Copy link to clipboard
+        copyLinkButton.addEventListener('click', () => {
+            homeworkLink.select();
+            document.execCommand('copy');
+            alert('הקישור הועתק בהצלחה!');
+        });
+
+        // Insert hyperlink into selected text
+        insertLinkBtn.addEventListener('click', () => {
+            const url = prompt("הכנס קישור:");
+            if (url) {
+                const selectedText = window.getSelection().toString();
+                const textArea = document.activeElement;  // Insert link into the focused textarea
+                if (textArea.tagName === 'TEXTAREA') {
+                    const oldValue = textArea.value;
+                    textArea.value = oldValue.replace(selectedText, `<a href="${url}">${selectedText}</a>`);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
