@@ -46,124 +46,74 @@
         button:hover {
             background-color: #023047;
         }
-        #linkContainer {
+        #viewResults {
             margin-top: 20px;
-            display: none;
-        }
-        #copyLink {
-            margin-top: 10px;
-        }
-        #sidebar {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-        }
-        .sidebar-button {
-            margin: 0 10px;
-            background-color: #219ebc;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .sidebar-button:hover {
-            background-color: #023047;
-        }
-        #homeScreen, #uploadSection, #viewSection {
-            display: none;
-        }
-        #homeScreen {
-            display: block;
         }
     </style>
 </head>
 <body>
     <h1>סיכום יום.קום</h1>
-
-    <div id="sidebar">
-        <button class="sidebar-button" onclick="showSection('uploadSection')">העלה שיעורי בית</button>
-        <button class="sidebar-button" onclick="showSection('viewSection')">צפה בשיעורי הבית</button>
+    
+    <div class="container" id="homeScreen">
+        <button onclick="showSection('uploadSection')">העלה שיעורי בית</button>
+        <button onclick="showSection('viewSection')">צפה בשיעורי הבית</button>
     </div>
 
-    <div id="homeScreen" class="container">
-        <h2>ברוכים הבאים לסיכום יום.קום</h2>
-        <p>בחר את הפעולה הרצויה מהתפריט בצד.</p>
-    </div>
-
-    <div id="uploadSection" class="container">
+    <div class="container" id="uploadSection" style="display: none;">
         <h2>העלה שיעורי בית</h2>
         <form id="uploadForm">
             <label for="date">בחר תאריך:</label>
             <input type="date" id="date" name="date" required>
-
+            
             <label for="lesson1">מה עשינו בשיעור הראשון?</label>
             <textarea id="lesson1" name="lesson1" placeholder="הקלד כאן..." required></textarea>
-
+            
+            <label for="lesson1Pic">תמונה מהמחברת (אופציונלי):</label>
+            <input type="file" id="lesson1Pic" name="lesson1Pic" accept="image/*">
+            
             <label for="lesson2">מה עשינו בשיעור השני?</label>
-            <textarea id="lesson2" name="lesson2" placeholder="הקלד כאן..." required></textarea>
-
+            <textarea id="lesson2" name="lesson2"></textarea>
+            
             <label for="lesson3">מה עשינו בשיעור השלישי?</label>
-            <textarea id="lesson3" name="lesson3" placeholder="הקלד כאן..." required></textarea>
-
+            <textarea id="lesson3" name="lesson3"></textarea>
+            
             <label for="lesson4">מה עשינו בשיעור הרביעי?</label>
-            <textarea id="lesson4" name="lesson4" placeholder="הקלד כאן..." required></textarea>
-
-            <!-- Optional Lessons -->
-            <label for="lesson5">מה עשינו בשיעור החמישי? (אופציונלי)</label>
-            <textarea id="lesson5" name="lesson5" placeholder="הקלד כאן..."></textarea>
-
+            <textarea id="lesson4" name="lesson4"></textarea>
+            
+            <label for="lesson5">מה עשינו בשיעור החמישי?</label>
+            <textarea id="lesson5" name="lesson5"></textarea>
+            
             <label for="lesson6">מה עשינו בשיעור השישי? (אופציונלי)</label>
-            <textarea id="lesson6" name="lesson6" placeholder="הקלד כאן..."></textarea>
-
+            <textarea id="lesson6" name="lesson6"></textarea>
+            
             <label for="lesson7">מה עשינו בשיעור השביעי? (אופציונלי)</label>
-            <textarea id="lesson7" name="lesson7" placeholder="הקלד כאן..."></textarea>
+            <textarea id="lesson7" name="lesson7"></textarea>
             
             <label for="cancelClass">השיעור התבטל?</label>
             <input type="checkbox" id="cancelClass" name="cancelClass">
-
-            <!-- Button for hyperlink insertion -->
-            <button type="button" id="insertLinkBtn">הוסף קישור</button>
-
+            
             <button type="submit">שלח שיעורי בית</button>
         </form>
-
-        <!-- Copyable Homework Link -->
-        <div id="linkContainer">
-            <p>הקישור לשיעורי הבית שלך:</p>
-            <input type="text" id="homeworkLink" readonly>
-            <button id="copyLink">העתק קישור</button>
-        </div>
     </div>
 
-    <div id="viewSection" class="container">
+    <div class="container" id="viewSection" style="display: none;">
         <h2>צפה בשיעורי הבית</h2>
         <form id="viewForm">
             <label for="viewDate">בחר תאריך:</label>
             <input type="date" id="viewDate" name="viewDate" required>
             <button type="submit">הצג</button>
         </form>
-
-        <!-- Display the homework details here -->
-        <div id="homeworkDetails" style="margin-top: 20px;"></div>
+        <div id="viewResults"></div>
     </div>
 
     <script>
-        const uploadForm = document.getElementById('uploadForm');
-        const viewForm = document.getElementById('viewForm');
-        const linkContainer = document.getElementById('linkContainer');
-        const homeworkLink = document.getElementById('homeworkLink');
-        const copyLinkButton = document.getElementById('copyLink');
-        const insertLinkBtn = document.getElementById('insertLinkBtn');
-
         function showSection(sectionId) {
-            document.getElementById('homeScreen').style.display = 'none';
             document.getElementById('uploadSection').style.display = 'none';
             document.getElementById('viewSection').style.display = 'none';
             document.getElementById(sectionId).style.display = 'block';
         }
 
-        uploadForm.addEventListener('submit', (event) => {
+        document.getElementById('uploadForm').addEventListener('submit', function(event) {
             event.preventDefault();
             
             const date = document.getElementById('date').value;
@@ -171,56 +121,57 @@
             const lesson2 = document.getElementById('lesson2').value;
             const lesson3 = document.getElementById('lesson3').value;
             const lesson4 = document.getElementById('lesson4').value;
-            const lesson5 = document.getElementById('lesson5').value || '(לא הוזן)';
-            const lesson6 = document.getElementById('lesson6').value || '(לא הוזן)';
-            const lesson7 = document.getElementById('lesson7').value || '(לא הוזן)';
+            const lesson5 = document.getElementById('lesson5').value;
+            const lesson6 = document.getElementById('lesson6').value;
+            const lesson7 = document.getElementById('lesson7').value;
             const cancelClass = document.getElementById('cancelClass').checked;
-
-            const lessons = {
-                lesson1, lesson2, lesson3, lesson4, lesson5, lesson6, lesson7
-            };
-
+            
             const data = {
                 date: date,
-                lessons: JSON.stringify(lessons) + (cancelClass ? ' (השיעור התבטל)' : ''),
+                lessons: [
+                    lesson1, lesson2, lesson3, lesson4, lesson5, lesson6, lesson7
+                ].filter(Boolean).join(' | '),
+                canceled: cancelClass ? ' (השיעור התבטל)' : ''
             };
-
-            fetch('https://script.google.com/macros/s/AKfycbzyrLNuRBHyJ6atN8qy-Zy8wdhZe-yLrhLh4a8eJBIOqagT7FTUjWseE59SKc3eSJ5R/exec', {
+            
+            fetch('https://script.google.com/macros/s/AKfycbzfie9MdIUf00rwoEFUyVDvD-4UnYQYmIz4BRdUMTEc3NjL-yaBDMMXYVKLAnsKJU4o/exec', {
                 method: 'POST',
                 body: new URLSearchParams(data),
             })
             .then(response => response.text())
             .then(result => {
                 alert('שיעורי הבית נשלחו בהצלחה!');
-
-                // Generate a homework link for sharing
-                const shareableLink = `https://arielcorporations.github.io/homework/index.html?date=${date}`;
-                homeworkLink.value = shareableLink;
-                linkContainer.style.display = 'block';
+                showSection('homeScreen');
             })
             .catch(error => {
                 console.error('Error:', error);
             });
         });
 
-        // Copy link to clipboard
-        copyLinkButton.addEventListener('click', () => {
-            homeworkLink.select();
-            document.execCommand('copy');
-            alert('הקישור הועתק בהצלחה!');
-        });
-
-        // Insert hyperlink into selected text
-        insertLinkBtn.addEventListener('click', () => {
-            const url = prompt("הכנס קישור:");
-            if (url) {
-                const selectedText = window.getSelection().toString();
-                const textArea = document.activeElement;  // Insert link into the focused textarea
-                if (textArea.tagName === 'TEXTAREA') {
-                    const oldValue = textArea.value;
-                    textArea.value = oldValue.replace(selectedText, `<a href="${url}">${selectedText}</a>`);
+        document.getElementById('viewForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const viewDate = document.getElementById('viewDate').value;
+            
+            fetch(`https://script.google.com/macros/s/AKfycbzfie9MdIUf00rwoEFUyVDvD-4UnYQYmIz4BRdUMTEc3NjL-yaBDMMXYVKLAnsKJU4o/execL?date=${viewDate}`, {
+                method: 'GET',
+            })
+            .then(response => response.json())
+            .then(data => {
+                const viewResults = document.getElementById('viewResults');
+                viewResults.innerHTML = '';
+                if (data && data.length > 0) {
+                    data.forEach((item, index) => {
+                        const lessonHtml = `<p><strong>שיעור ${index + 1}:</strong> ${item}</p>`;
+                        viewResults.innerHTML += lessonHtml;
+                    });
+                } else {
+                    viewResults.innerHTML = '<p>לא נמצאו שיעורי בית עבור תאריך זה.</p>';
                 }
-            }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
         });
     </script>
 </body>
