@@ -185,7 +185,7 @@
                 lessons: JSON.stringify(lessons) + (cancelClass ? ' (השיעור התבטל)' : ''),
             };
 
-            fetch('https://script.google.com/macros/s/AKfycbzfie9MdIUf00rwoEFUyVDvD-4UnYQYmIz4BRdUMTEc3NjL-yaBDMMXYVKLAnsKJU4o/exec', {
+            fetch('https://script.google.com/macros/s/AKfycbzyrLNuRBHyJ6atN8qy-Zy8wdhZe-yLrhLh4a8eJBIOqagT7FTUjWseE59SKc3eSJ5R/exec', {
                 method: 'POST',
                 body: new URLSearchParams(data),
             })
