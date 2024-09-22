@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <title>העלאת סיכום</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <h1>העלאת סיכום</h1>
+    <form id="uploadForm">
+        <input type="text" id="summaryName" placeholder="תאריך הסיכום" required>
+        <textarea id="summaryText" placeholder="כתוב את הסיכום כאן" required></textarea>
+        <input type="url" id="fileUrl" placeholder="קישור לתמונה/סיכום" required>
+        <button type="submit">העלה</button>
+    </form>
+    <div id="message"></div>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('summaryName').value;
+            const text = document.getElementById('summaryText').value;
+            const fileUrl = document.getElementById('fileUrl').value;
+            const scriptUrl = 'https://script.google.com/macros/s/AKfycbz6SRWTwi3iORNyAbM2cIezE36DkGEX6hXYjop5dnHDIEgYkQ3fRQL_CatTiQ-VjM8p/exec?action=upload&name=' + encodeURIComponent(name) + '&text=' + encodeURIComponent(text) + '&fileUrl=' + encodeURIComponent(fileUrl);
+
+            fetch(scriptUrl)
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('message').textContent = data;
+                })
+                .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>

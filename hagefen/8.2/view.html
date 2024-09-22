@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <title>צפייה בסיכומים</title>
+    <link rel="stylesheet" href="/styles.css"> <!-- Adjust path if necessary -->
+</head>
+<body>
+    <h1>סיכומים שהועלו</h1>
+    <div id="summaries" class="summary-container"></div>
+
+    <script>
+        const scriptUrl = 'https://script.google.com/macros/s/AKfycbz6SRWTwi3iORNyAbM2cIezE36DkGEX6hXYjop5dnHDIEgYkQ3fRQL_CatTiQ-VjM8p/exec?action=view';
+
+        fetch(scriptUrl)
+            .then(response => response.json())
+            .then(data => {
+                const summariesDiv = document.getElementById('summaries');
+                summariesDiv.innerHTML = ''; // Clear previous content
+                if (data.length === 0) {
+                    summariesDiv.textContent = 'לא הועלו סיכומים עדיין.';
+                } else {
+                    data.forEach(row => {
+                        const summaryItem = document.createElement('div');
+                        summaryItem.classList.add('summary-box');
+                        summaryItem.innerHTML = `
+                            <strong>${row[0]}</strong>
+                            <p>${row[1]}</p>
+                            <a href="${row[2]}" target="_blank">צפה כאן</a>
+                        `;
+                        summariesDiv.appendChild(summaryItem);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                const summariesDiv = document.getElementById('summaries');
+                summariesDiv.textContent = 'שגיאה בטעינת הסיכומים.';
+            });
+    </script>
+</body>
+</html>
