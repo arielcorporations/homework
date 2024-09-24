@@ -136,3 +136,56 @@ section {
         padding: 10px;
     }
 }
+/* Responsive styles for mobile devices */
+@media (max-width: 768px) {
+    body {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    h1, h2, h3 {
+        font-size: 1.4em;
+    }
+
+    .container {
+        padding: 5px;
+        margin: 0 10px;
+    }
+
+    button {
+        font-size: 1em;
+    }
+}
+
+/* Very small screens */
+@media (max-width: 480px) {
+    body {
+        font-size: 12px;
+        padding: 5px;
+    }
+
+    h1, h2, h3 {
+        font-size: 1.2em;
+    }
+
+    .container {
+        padding: 0;
+    }
+
+    button {
+        font-size: 0.9em;
+    }
+}
+@media (max-width: 768px) {
+    button {
+        padding: 10px 15px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    button {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+}
